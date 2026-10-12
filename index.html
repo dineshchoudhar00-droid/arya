@@ -1,0 +1,1056 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arya StudyVault | Study Material Portal</title>
+
+<style>
+:root {
+  --primary: #4f46e5;
+  --dark: #172033;
+  --light: #f5f7ff;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--light);
+  color: var(--dark);
+}
+
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.logo span {
+  color: var(--dark);
+}
+
+.header-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+button, select, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 16px;
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: white;
+}
+
+.secondary-btn {
+  background: #eef2ff;
+  color: var(--primary);
+}
+
+.hero {
+  padding: 55px 6%;
+  color: white;
+  background: linear-gradient(120deg, #312e81, #4f46e5, #818cf8);
+}
+
+.hero h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  margin-bottom: 14px;
+}
+
+.hero p {
+  line-height: 1.7;
+  max-width: 680px;
+  color: #eef2ff;
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.badge {
+  background: #ffffff20;
+  border: 1px solid #ffffff45;
+  padding: 9px 13px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.container {
+  width: 88%;
+  max-width: 1250px;
+  margin: 30px auto;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.stat-card h2 {
+  color: var(--primary);
+  font-size: 28px;
+  margin-bottom: 7px;
+}
+
+.stat-card p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.section-title {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.section-description {
+  color: var(--muted);
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+.filters {
+  background: white;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary);
+}
+
+.resource-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 28px 0 18px;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.resource-card {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.resource-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px #17203312;
+}
+
+.file-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  background: #eef2ff;
+  border-radius: 11px;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.type-tag {
+  display: inline-block;
+  font-size: 12px;
+  color: #4338ca;
+  background: #eef2ff;
+  padding: 6px 9px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.resource-card h3 {
+  font-size: 17px;
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+
+.resource-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.card-actions button {
+  flex: 1;
+  min-width: 80px;
+  font-size: 13px;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  background: white;
+  border: 1px dashed #cbd5e1;
+  padding: 45px 20px;
+  border-radius: 14px;
+}
+
+.empty-state h3 {
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.upload-section {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 14px;
+  margin-top: 40px;
+}
+
+.upload-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 17px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.file-input {
+  background: #f8fafc;
+  padding: 15px;
+  border: 1px dashed #a5b4fc;
+  border-radius: 8px;
+}
+
+.notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  border-radius: 9px;
+  padding: 13px;
+  line-height: 1.6;
+  font-size: 13px;
+  margin-top: 18px;
+}
+
+footer {
+  margin-top: 50px;
+  background: #172033;
+  color: white;
+  padding: 28px 6%;
+  text-align: center;
+  line-height: 1.8;
+}
+
+footer p {
+  color: #cbd5e1;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .filters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .resource-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .upload-form {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 15px 5%;
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  .hero {
+    padding: 38px 5%;
+  }
+
+  .container {
+    width: 92%;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .filters,
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-heading {
+    align-items: flex-start;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Arya<span>StudyVault</span></div>
+
+  <div class="header-right">
+    <button class="secondary-btn" onclick="scrollToMaterials()">
+      Study Material
+    </button>
+
+    <button class="primary-btn" onclick="scrollToUpload()">
+      + Upload PDF
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Your Complete B.Tech Study Library</h1>
+
+  <p>
+    Arya College, Main Campus, Jaipur ke B.Tech students ke liye
+    ek study material portal. Semester-wise notes, previous year
+    question papers, practicals aur assignments ek hi jagah.
+  </p>
+
+  <div class="hero-badges">
+    <span class="badge">🎓 All Branches</span>
+    <span class="badge">📚 4 Years</span>
+    <span class="badge">📄 8 Semesters</span>
+    <span class="badge">⬇ PDF Resources</span>
+  </div>
+</section>
+
+<main class="container">
+
+  <section class="stats">
+    <div class="stat-card">
+      <h2 id="totalResources">0</h2>
+      <p>Total Study Resources</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>8</h2>
+      <p>B.Tech Semesters</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>4</h2>
+      <p>Academic Years</p>
+    </div>
+  </section>
+
+  <section id="materials">
+    <h2 class="section-title">Find Study Material</h2>
+
+    <p class="section-description">
+      Apni branch, year, semester aur material type select karke PDFs
+      search karo.
+    </p>
+
+    <div class="filters">
+
+      <div class="field">
+        <label for="searchInput">Search</label>
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Subject, topic, PDF name..."
+        >
+      </div>
+
+      <div class="field">
+        <label for="branchFilter">Branch</label>
+        <select id="branchFilter">
+          <option value="">All Branches</option>
+          <option>B.Tech CSE</option>
+          <option>B.Tech CSE (AI/ML)</option>
+          <option>B.Tech IT</option>
+          <option>B.Tech ECE</option>
+          <option>B.Tech Electrical</option>
+          <option>B.Tech Mechanical</option>
+          <option>B.Tech Civil</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="yearFilter">Year</label>
+        <select id="yearFilter">
+          <option value="">All Years</option>
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="semesterFilter">Semester</label>
+        <select id="semesterFilter">
+          <option value="">All Semesters</option>
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+          <option value="5">Semester 5</option>
+          <option value="6">Semester 6</option>
+          <option value="7">Semester 7</option>
+          <option value="8">Semester 8</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="typeFilter">Material Type</label>
+        <select id="typeFilter">
+          <option value="">All Types</option>
+          <option>Notes</option>
+          <option>Previous Year Paper</option>
+          <option>Practical</option>
+          <option>Assignment</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="paperYearFilter">Paper Year</label>
+        <select id="paperYearFilter">
+          <option value="">All Paper Years</option>
+          <option>2022</option>
+          <option>2023</option>
+          <option>2024</option>
+          <option>2025</option>
+          <option>2026</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="sortFilter">Sort By</label>
+        <select id="sortFilter">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="title">Name A–Z</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>&nbsp;</label>
+        <button class="secondary-btn" onclick="resetFilters()" style="width:100%">
+          Reset Filters
+        </button>
+      </div>
+
+    </div>
+
+    <div class="resource-heading">
+      <div>
+        <h2 class="section-title">Available Resources</h2>
+        <p id="resultCount" class="section-description" style="margin:8px 0 0">
+          Loading resources...
+        </p>
+      </div>
+    </div>
+
+    <div id="resourceGrid" class="resource-grid"></div>
+  </section>
+
+  <section class="upload-section" id="uploadSection">
+    <h2 class="section-title">Upload Study Material</h2>
+
+    <p class="section-description">
+      PDF select karo aur uski details bharo.
+    </p>
+
+    <form id="uploadForm" class="upload-form">
+
+      <div class="field">
+        <label for="uploadTitle">PDF / Subject Name *</label>
+        <input
+          type="text"
+          id="uploadTitle"
+          placeholder="Example: Engineering Mathematics-I"
+          maxlength="120"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="uploadSubject">Subject *</label>
+        <input
+          type="text"
+          id="uploadSubject"
+          placeholder="Example: Mathematics"
+          maxlength="100"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="uploadBranch">Branch *</label>
+        <select id="uploadBranch" required>
+          <option value="">Select Branch</option>
+          <option>B.Tech CSE</option>
+          <option>B.Tech CSE (AI/ML)</option>
+          <option>B.Tech IT</option>
+          <option>B.Tech ECE</option>
+          <option>B.Tech Electrical</option>
+          <option>B.Tech Mechanical</option>
+          <option>B.Tech Civil</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="uploadYear">Academic Year *</label>
+        <select id="uploadYear" required>
+          <option value="">Select Year</option>
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="uploadSemester">Semester *</label>
+        <select id="uploadSemester" required>
+          <option value="">Select Semester</option>
+          <option value="1">Semester 1</option>
+          <option value="2">Semester 2</option>
+          <option value="3">Semester 3</option>
+          <option value="4">Semester 4</option>
+          <option value="5">Semester 5</option>
+          <option value="6">Semester 6</option>
+          <option value="7">Semester 7</option>
+          <option value="8">Semester 8</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="uploadType">Material Type *</label>
+        <select id="uploadType" required>
+          <option value="">Select Type</option>
+          <option>Notes</option>
+          <option>Previous Year Paper</option>
+          <option>Practical</option>
+          <option>Assignment</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="uploadPaperYear">Paper Year (if applicable)</label>
+        <select id="uploadPaperYear">
+          <option value="">Not Applicable</option>
+          <option>2022</option>
+          <option>2023</option>
+          <option>2024</option>
+          <option>2025</option>
+          <option>2026</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="uploadFile">Select PDF *</label>
+        <input
+          class="file-input"
+          type="file"
+          id="uploadFile"
+          accept=".pdf,application/pdf"
+          required
+        >
+      </div>
+
+      <div class="field full-width">
+        <button class="primary-btn" id="uploadButton" type="submit">
+          Upload Study Material
+        </button>
+      </div>
+
+    </form>
+
+    <div class="notice">
+      <strong>Important:</strong> Ye starter version PDFs ko isi browser ke
+      IndexedDB storage mein rakhta hai. Ye online shared storage nahi hai.
+      Browser data clear karne se saved PDFs delete ho sakti hain. Ismein
+      abhi secure Admin Login nahi hai, isliye ise public website par upload
+      karne se pehle authentication aur server-side permissions lagana zaroori hai.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <strong>Arya StudyVault</strong>
+  <p>Study Together. Learn Better.</p>
+  <p>Student study-resource project for Arya College, Main Campus, Jaipur.</p>
+</footer>
+
+<script>
+"use strict";
+
+const DB_NAME = "AryaStudyVaultDB";
+const DB_VERSION = 1;
+const STORE_NAME = "resources";
+
+let db;
+let resources = [];
+let objectUrls = [];
+
+const $ = (id) => document.getElementById(id);
+
+function openDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onupgradeneeded = () => {
+      const database = request.result;
+
+      if (!database.objectStoreNames.contains(STORE_NAME)) {
+        const store = database.createObjectStore(STORE_NAME, {
+          keyPath: "id"
+        });
+
+        store.createIndex("title", "title", { unique: false });
+        store.createIndex("branch", "branch", { unique: false });
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function getAllResources() {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readonly");
+    const request = transaction.objectStore(STORE_NAME).getAll();
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function saveResource(resource) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readwrite");
+
+    transaction.objectStore(STORE_NAME).put(resource);
+
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+    transaction.onabort = () => reject(transaction.error);
+  });
+}
+
+function deleteResource(id) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readwrite");
+
+    transaction.objectStore(STORE_NAME).delete(id);
+
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+  });
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => {
+    const map = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    };
+
+    return map[character];
+  });
+}
+
+function revokeObjectUrls() {
+  objectUrls.forEach((url) => URL.revokeObjectURL(url));
+  objectUrls = [];
+}
+
+function getFileUrl(resource) {
+  const url = URL.createObjectURL(resource.file);
+  objectUrls.push(url);
+  return url;
+}
+
+function getFilters() {
+  return {
+    search: $("searchInput").value.trim().toLowerCase(),
+    branch: $("branchFilter").value,
+    year: $("yearFilter").value,
+    semester: $("semesterFilter").value,
+    type: $("typeFilter").value,
+    paperYear: $("paperYearFilter").value,
+    sort: $("sortFilter").value
+  };
+}
+
+function renderResources() {
+  revokeObjectUrls();
+
+  const filters = getFilters();
+
+  let filtered = resources.filter((item) => {
+    const searchable = [
+      item.title,
+      item.subject,
+      item.branch,
+      item.type,
+      item.paperYear || ""
+    ].join(" ").toLowerCase();
+
+    return (
+      (!filters.search || searchable.includes(filters.search)) &&
+      (!filters.branch || item.branch === filters.branch) &&
+      (!filters.year || String(item.year) === filters.year) &&
+      (!filters.semester || String(item.semester) === filters.semester) &&
+      (!filters.type || item.type === filters.type) &&
+      (!filters.paperYear || String(item.paperYear) === filters.paperYear)
+    );
+  });
+
+  if (filters.sort === "oldest") {
+    filtered.sort((a, b) => a.createdAt - b.createdAt);
+  } else if (filters.sort === "title") {
+    filtered.sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    filtered.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  $("totalResources").textContent = resources.length;
+  $("resultCount").textContent =
+    `${filtered.length} resource${filtered.length === 1 ? "" : "s"} found`;
+
+  const grid = $("resourceGrid");
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <h3>📚 No study material found</h3>
+        <p>
+          Abhi is filter ke liye koi PDF available nahi hai.
+          Upload section se apni PDF add karo.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((item) => {
+    const url = getFileUrl(item);
+    const safeUrl = escapeHTML(url);
+
+    const paperYearText = item.paperYear
+      ? ` · Paper: ${escapeHTML(item.paperYear)}`
+      : "";
+
+    return `
+      <article class="resource-card">
+        <div class="file-icon">📄</div>
+
+        <span class="type-tag">${escapeHTML(item.type)}</span>
+
+        <h3>${escapeHTML(item.title)}</h3>
+
+        <p>
+          <strong>Subject:</strong> ${escapeHTML(item.subject)}<br>
+          <strong>Branch:</strong> ${escapeHTML(item.branch)}<br>
+          <strong>Year:</strong> ${escapeHTML(item.year)}<br>
+          <strong>Semester:</strong> ${escapeHTML(item.semester)}
+          ${paperYearText}<br>
+          <strong>File:</strong> ${escapeHTML(item.fileName)}
+        </p>
+
+        <div class="card-actions">
+          <button class="primary-btn"
+            onclick="openPDF('${safeUrl}')">
+            View PDF
+          </button>
+
+          <button class="secondary-btn"
+            onclick="downloadPDF('${safeUrl}', '${escapeHTML(item.fileName)}')">
+            Download
+          </button>
+
+          <button class="delete-btn"
+            onclick="removePDF('${escapeHTML(item.id)}')">
+            Delete
+          </button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function openPDF(url) {
+  window.open(url, "_blank", "noopener");
+}
+
+function downloadPDF(url, fileName) {
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+async function removePDF(id) {
+  const confirmed = confirm(
+    "Kya tum is PDF ko is browser ke StudyVault se delete karna chahte ho?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await deleteResource(id);
+    await loadResources();
+  } catch (error) {
+    alert("PDF delete nahi hui. Dobara try karo.");
+    console.error(error);
+  }
+}
+
+async function loadResources() {
+  resources = await getAllResources();
+  renderResources();
+}
+
+function scrollToMaterials() {
+  $("materials").scrollIntoView({ behavior: "smooth" });
+}
+
+function scrollToUpload() {
+  $("uploadSection").scrollIntoView({ behavior: "smooth" });
+}
+
+function resetFilters() {
+  $("searchInput").value = "";
+  $("branchFilter").value = "";
+  $("yearFilter").value = "";
+  $("semesterFilter").value = "";
+  $("typeFilter").value = "";
+  $("paperYearFilter").value = "";
+  $("sortFilter").value = "newest";
+
+  renderResources();
+}
+
+$("uploadForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const file = $("uploadFile").files[0];
+
+  if (!file) {
+    alert("Pehle PDF select karo.");
+    return;
+  }
+
+  if (
+    file.type !== "application/pdf" &&
+    !file.name.toLowerCase().endsWith(".pdf")
+  ) {
+    alert("Sirf PDF files upload kar sakte ho.");
+    return;
+  }
+
+  // Starter version mein per-file size limit.
+  if (file.size > 20 * 1024 * 1024) {
+    alert("File 20 MB se chhoti honi chahiye.");
+    return;
+  }
+
+  const title = $("uploadTitle").value.trim();
+  const subject = $("uploadSubject").value.trim();
+  const branch = $("uploadBranch").value;
+  const year = $("uploadYear").value;
+  const semester = $("uploadSemester").value;
+  const type = $("uploadType").value;
+  const paperYear = $("uploadPaperYear").value;
+
+  if (!title || !subject || !branch || !year || !semester || !type) {
+    alert("Saari required details bharo.");
+    return;
+  }
+
+  const button = $("uploadButton");
+  button.disabled = true;
+  button.textContent = "Saving PDF...";
+
+  const resource = {
+    id: crypto.randomUUID
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    title,
+    subject,
+    branch,
+    year: Number(year),
+    semester: Number(semester),
+    type,
+    paperYear: paperYear || "",
+    fileName: file.name,
+    file,
+    createdAt: Date.now()
+  };
+
+  try {
+    await saveResource(resource);
+    await loadResources();
+
+    $("uploadForm").reset();
+
+    alert(
+      "PDF save ho gayi! Dhyan rahe: ye abhi sirf isi browser mein available hai."
+    );
+
+    $("resourceGrid").scrollIntoView({ behavior: "smooth" });
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "PDF save nahi ho payi. Browser storage full ho sakta hai."
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Upload Study Material";
+  }
+});
+
+[
+  "searchInput",
+  "branchFilter",
+  "yearFilter",
+  "semesterFilter",
+  "typeFilter",
+  "paperYearFilter",
+  "sortFilter"
+].forEach((id) => {
+  $(id).addEventListener("input", renderResources);
+});
+
+async function init() {
+  try {
+    db = await openDatabase();
+    await loadResources();
+  } catch (error) {
+    console.error(error);
+
+    $("resourceGrid").innerHTML = `
+      <div class="empty-state">
+        <h3>Storage open nahi ho payi</h3>
+        <p>
+          Updated Chrome ya Edge browser mein file kholo.
+          Agar issue rahe, local development server se website chalao.
+        </p>
+      </div>
+    `;
+
+    $("resultCount").textContent = "Storage unavailable";
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
+
