@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Arya StudyVault | Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f6fb;
+    color: #172033;
+}
+
+header {
+    background: #102b59;
+    color: white;
+    padding: 20px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    background: #315ca8;
+    padding: 11px 15px;
+    border-radius: 8px;
+}
+
+.container {
+    width: 92%;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px #0000000a;
+}
+
+.panel h2 {
+    color: #102b59;
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #657189;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d3dbea;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 17px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: #174ea6;
+    color: white;
+}
+
+.secondary {
+    background: #e6efff;
+    color: #174ea6;
+}
+
+.danger {
+    background: #ffe5e5;
+    color: #a51e1e;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.status {
+    margin-top: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.resource {
+    padding: 17px;
+    background: #f8faff;
+    border: 1px solid #e1e8f3;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+.resource h3 {
+    overflow-wrap: anywhere;
+    margin-bottom: 8px;
+}
+
+.resource p {
+    color: #657189;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.resource-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+footer {
+    background: #102b59;
+    color: white;
+    padding: 22px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+@media(max-width: 650px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>🔐 Arya StudyVault</h1>
+        <p style="color:#dce7ff;margin-top:5px;">
+            Authorised User Dashboard
+        </p>
+    </div>
+
+    <a href="index.html">🏠 Home</a>
+</header>
+
+<main class="container">
+
+    <!-- LOGIN SECTION -->
+
+    <section class="panel" id="loginPanel">
+        <h2>Admin Login</h2>
+
+        <p class="description">
+            Study material upload aur manage karne ke liye login karein.
+        </p>
+
+        <form id="loginForm" class="form-grid">
+
+            <div class="field full">
+                <label for="email">Admin Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="field full">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <div class="field full">
+                <button class="primary" id="loginButton" type="submit">
+                    Sign In
+                </button>
+            </div>
+
+        </form>
+
+        <p class="status" id="loginStatus" role="status"></p>
+    </section>
+
+
+    <!-- ADMIN DASHBOARD -->
+
+    <section id="dashboard" class="hidden">
+
+        <section class="panel">
+
+            <h2>📤 Upload Study Material</h2>
+
+            <p class="description">
+                PDF upload karo. Upload successful hone par
+                Students page par material available ho sakega.
+            </p>
+
+            <form id="uploadForm" class="form-grid">
+
+                <div class="field full">
+                    <label for="title">PDF Title</label>
+                    <input
+                        id="title"
+                        type="text"
+                        placeholder="Engineering Mathematics Notes"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="subject">Subject</label>
+                    <input
+                        id="subject"
+                        type="text"
+                        placeholder="Mathematics"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="branch">Branch</label>
+                    <select id="branch" required>
+                        <option value="">Select Branch</option>
+                        <option value="CSE">CSE</option>
+                        <option value="AI">AI</option>
+                        <option value="AIML">AIML</option>
+                        <option value="ECE">ECE</option>
+                        <option value="EE">EE</option>
+                        <option value="ME">ME</option>
+                        <option value="CE">CE</option>
+                        <option value="ALL">ALL</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="academicYear">Academic Year</label>
+                    <select id="academicYear" required>
+                        <option value="">Select Year</option>
+                        <option value="1">First Year</option>
+                        <option value="2">Second Year</option>
+                        <option value="3">Third Year</option>
+                        <option value="4">Fourth Year</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="semester">Semester</label>
+                    <select id="semester" required>
+                        <option value="">Select Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                        <option value="7">Semester 7</option>
+                        <option value="8">Semester 8</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="materialType">Material Type</label>
+                    <select id="materialType" required>
+                        <option value="">Select Type</option>
+                        <option value="Notes">Notes</option>
+                        <option value="Previous Year Paper">
+                            Previous Year Paper
+                        </option>
+                        <option value="Syllabus">Syllabus</option>
+                        <option value="Assignment">Assignment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="paperYear">Paper Year (Optional)</label>
+                    <input
+                        type="number"
+                        id="paperYear"
+                        min="2000"
+                        max="2100"
+                        placeholder="2025"
+                    >
+                </div>
+
+                <div class="field full">
+                    <label for="pdfFile">Select PDF</label>
+                    <input
+                        type="file"
+                        id="pdfFile"
+                        accept=".pdf,application/pdf"
+                        required
+                    >
+                    <small>Maximum file size: 20 MB</small>
+                </div>
+
+                <div class="field full">
+                    <button
+                        class="primary"
+                        id="uploadButton"
+                        type="submit"
+                    >
+                        Upload PDF
+                    </button>
+                </div>
+
+            </form>
+
+            <p class="status" id="uploadStatus" role="status"></p>
+
+        </section>
+
+
+        <!-- UPLOADED MATERIALS -->
+
+        <section class="panel">
+
+            <h2>📚 Uploaded Materials</h2>
+
+            <p class="description">
+                Yahan uploaded PDFs dekh aur manage kar sakte ho.
+            </p>
+
+            <button
+                class="secondary"
+                id="refreshButton"
+                type="button"
+            >
+                Refresh List
+            </button>
+
+            <p class="status" id="listStatus" role="status"></p>
+
+            <div id="resourceList"></div>
+
+        </section>
+
+
+        <!-- ACCOUNT -->
+
+        <section class="panel">
+            <h2>Account</h2>
+
+            <p id="accountEmail" class="description"></p>
+
+            <button
+                class="secondary"
+                id="logoutButton"
+                type="button"
+            >
+                Sign Out
+            </button>
+        </section>
+
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 Arya StudyVault | Authorised Dashboard</p>
+</footer>
+
+
+<script>
+const SUPABASE_URL =
+    "https://zukxhffmasnnyuonmlbx.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_lfJyl7L1JuKvXhAlJ0Oryg_0waqWKM-";
+
+const BUCKET = "studymeterial";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+const loginPanel = document.getElementById("loginPanel");
+const dashboard = document.getElementById("dashboard");
+
+const loginForm = document.getElementById("loginForm");
+const loginStatus = document.getElementById("loginStatus");
+const uploadStatus = document.getElementById("uploadStatus");
+const listStatus = document.getElementById("listStatus");
+
+const uploadButton = document.getElementById("uploadButton");
+const loginButton = document.getElementById("loginButton");
+const resourceList = document.getElementById("resourceList");
+
+let currentUser = null;
+let deletingIds = new Set();
+
+function showMessage(element, message) {
+    element.textContent = message;
+}
+
+function safeText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+/*
+  Important:
+  Admin access tabhi milega jab Supabase Auth user ki
+  app_metadata mein role = admin set ho.
+*/
+
+function isAdmin(user) {
+    return user?.app_metadata?.role === "admin";
+}
+
+function getPdfUrl(resource) {
+    return db.storage
+        .from(BUCKET)
+        .getPublicUrl(resource.file_path)
+        .data.publicUrl;
+}
+
+function showDashboard(user) {
+    currentUser = user;
+
+    loginPanel.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+
+    document.getElementById("accountEmail").textContent =
+        "Logged in as: " + (user.email || "Authorised Admin");
+
+    loadResources();
+}
+
+function showLogin() {
+    currentUser = null;
+
+    dashboard.classList.add("hidden");
+    loginPanel.classList.remove("hidden");
+
+    resourceList.replaceChildren();
+}
+
+async function login(email, password) {
+    const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        throw error;
+    }
+
+    if (!isAdmin(data.user)) {
+        await db.auth.signOut();
+
+        throw new Error(
+            "Is account ko admin permission nahi hai. Supabase mein admin role configure karo."
+        );
+    }
+
+    showDashboard(data.user);
+}
+
+loginForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    loginButton.disabled = true;
+    showMessage(loginStatus, "Login ho raha hai...");
+
+    try {
+        await login(
+            document.getElementById("email").value.trim(),
+            document.getElementById("password").value
+        );
+
+        showMessage(loginStatus, "");
+
+    } catch (error) {
+        showMessage(loginStatus, error.message || "Login failed.");
+
+    } finally {
+        loginButton.disabled = false;
+    }
+});
+
+
+/* UPLOAD PDF */
+
+document.getElementById("uploadForm").addEventListener(
+    "submit",
+    async event => {
+        event.preventDefault();
+
+        if (!currentUser || !isAdmin(currentUser)) {
+            showMessage(uploadStatus, "Admin login required.");
+            return;
+        }
+
+        const file = document.getElementById("pdfFile").files[0];
+
+        if (!file) {
+            showMessage(uploadStatus, "Pehle PDF select karo.");
+            return;
+        }
+
+        if (
+            file.type !== "application/pdf" &&
+            !file.name.toLowerCase().endsWith(".pdf")
+        ) {
+            showMessage(uploadStatus, "Sirf PDF files allowed hain.");
+            return;
+        }
+
+        if (file.size > 20 * 1024 * 1024) {
+            showMessage(uploadStatus, "PDF ka size 20 MB se kam hona chahiye.");
+            return;
+        }
+
+        uploadButton.disabled = true;
+
+        let uploadedPath = null;
+
+        showMessage(uploadStatus, "PDF upload ho rahi hai...");
+
+        try {
+            const extension = ".pdf";
+
+            const safeFileName = file.name
+                .replace(/[^a-zA-Z0-9._-]/g, "_")
+                .replace(/\.pdf$/i, "");
+
+            const filePath =
+                `${crypto.randomUUID()}-${safeFileName}${extension}`;
+
+            const { data: storageData, error: storageError } =
+                await db.storage
+                    .from(BUCKET)
+                    .upload(filePath, file, {
+                        contentType: "application/pdf",
+                        upsert: false
+                    });
+
+            if (storageError) {
+                throw storageError;
+            }
+
+            uploadedPath = storageData.path;
+
+            const paperYearValue =
+                document.getElementById("paperYear").value;
+
+            const record = {
+                title: document.getElementById("title").value.trim(),
+                subject: document.getElementById("subject").value.trim(),
+                branch: document.getElementById("branch").value,
+                academic_year: Number(
+                    document.getElementById("academicYear").value
+                ),
+                semester: Number(
+                    document.getElementById("semester").value
+                ),
+                material_type: document.getElementById("materialType").value,
+                paper_year: paperYearValue
+                    ? Number(paperYearValue)
+                    : null,
+                file_name: file.name,
+                file_path: uploadedPath
+            };
+
+            const { error: insertError } = await db
+                .from("study_resources")
+                .insert(record);
+
+            if (insertError) {
+                /*
+                  Database insert fail hone par uploaded file ko
+                  delete karne ki koshish karo.
+                */
+
+                const { error: cleanupError } = await db.storage
+                    .from(BUCKET)
+                    .remove([uploadedPath]);
+
+                if (cleanupError) {
+                    console.error(
+                        "Cleanup failed:",
+                        cleanupError.message
+                    );
+                }
+
+                uploadedPath = null;
+
+                throw insertError;
+            }
+
+            showMessage(uploadStatus, "✅ PDF successfully upload ho gayi!");
+
+            document.getElementById("uploadForm").reset();
+
+            await loadResources();
+
+        } catch (error) {
+            console.error(error);
+
+            showMessage(
+                uploadStatus,
+                "❌ Upload failed: " +
+                (error.message || "Unknown error")
+            );
+
+        } finally {
+            uploadButton.disabled = false;
+        }
+    }
+);
+
+
+/* LOAD RESOURCES */
+
+async function loadResources() {
+    if (!currentUser || !isAdmin(currentUser)) {
+        return;
+    }
+
+    showMessage(listStatus, "Materials load ho rahe hain...");
+
+    resourceList.replaceChildren();
+
+    const { data, error } = await db
+        .from("study_resources")
+        .select(
+            "id,title,subject,branch,academic_year,semester,material_type,paper_year,file_name,file_path,created_at"
+        )
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+
+        showMessage(
+            listStatus,
+            "Materials load nahi hue. Database SELECT policy check karo."
+        );
+
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        showMessage(listStatus, "Abhi koi material upload nahi hua.");
+
+        return;
+    }
+
+    showMessage(listStatus, `${data.length} material(s) available hain.`);
+
+    data.forEach(resource => {
+        const card = document.createElement("article");
+
+        card.className = "resource";
+
+        const title = safeText(resource.title);
+        const subject = safeText(resource.subject);
+        const branch = safeText(resource.branch);
+        const semester = safeText(resource.semester);
+        const academicYear = safeText(resource.academic_year);
+        const type = safeText(resource.material_type);
+        const fileName = safeText(resource.file_name);
+
+        const pdfUrl = getPdfUrl(resource);
+
+        card.innerHTML = `
+            <h3>${title}</h3>
+
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Branch:</strong> ${branch}</p>
+            <p><strong>Semester:</strong> ${semester}</p>
+            <p><strong>Academic Year:</strong> ${academicYear}</p>
+            <p><strong>Type:</strong> ${type}</p>
+            <p><strong>File:</strong> ${fileName}</p>
+
+            <div class="resource-actions">
+
+                <a
+                    class="secondary"
+                    style="padding:10px 13px;border-radius:8px;text-decoration:none;"
+                    href="${safeText(pdfUrl)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View PDF
+                </a>
+
+                <button
+                    class="danger"
+                    type="button"
+                    data-delete-id="${safeText(resource.id)}"
+                >
+                    Delete PDF
+                </button>
+
+            </div>
+        `;
+
+        resourceList.appendChild(card);
+    });
+}
+
+
+/* DELETE RESOURCE */
+
+resourceList.addEventListener("click", async event => {
+    const button = event.target.closest("[data-delete-id]");
+
+    if (!button) {
+        return;
+    }
+
+    if (!currentUser || !isAdmin(currentUser)) {
+        alert("Admin login required.");
+        return;
+    }
+
+    const id = button.dataset.deleteId;
+
+    if (deletingIds.has(id)) {
+        return;
+    }
+
+    const confirmed = confirm(
+        "Kya tum sach mein is PDF ko delete karna chahte ho?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    deletingIds.add(id);
+    button.disabled = true;
+
+    try {
+        const { data: resource, error: findError } = await db
+            .from("study_resources")
+            .select("id,file_path")
+            .eq("id", id)
+            .maybeSingle();
+
+        if (findError) {
+            throw findError;
+        }
+
+        if (!resource) {
+            throw new Error("Material nahi mila.");
+        }
+
+        /*
+          Pehle database row delete karo.
+          Agar storage deletion fail ho, database record
+          dobara insert karne ki koshish hoti hai.
+        */
+
+        const { data: deletedRows, error: deleteError } = await db
+            .from("study_resources")
+            .delete()
+            .eq("id", id)
+            .select("id");
+
+        if (deleteError) {
+            throw deleteError;
+        }
+
+        if (!deletedRows || deletedRows.length === 0) {
+            throw new Error(
+                "Database row delete nahi hui. RLS DELETE policy check karo."
+            );
+        }
+
+        const { error: storageDeleteError } = await db.storage
+            .from(BUCKET)
+            .remove([resource.file_path]);
+
+        if (storageDeleteError) {
+            console.error(storageDeleteError);
+
+            /*
+              Storage deletion fail hui toh metadata restore
+              karne ki koshish karte hain.
+            */
+
+            const { error: restoreError } = await db
+                .from("study_resources")
+                .insert({
+                    id: resource.id,
+                    file_path: resource.file_path
+                });
+
+            if (restoreError) {
+                console.error("Restore failed:", restoreError);
+            }
+
+            throw new Error(
+                "Storage file delete nahi hui. Policies aur permissions check karo."
+            );
+        }
+
+        showMessage(listStatus, "✅ PDF delete ho gayi.");
+
+        await loadResources();
+
+    } catch (error) {
+        console.error(error);
+
+        alert(error.message || "Delete operation failed.");
+
+        await loadResources();
+
+    } finally {
+        deletingIds.delete(id);
+    }
+});
+
+
+/* REFRESH */
+
+document.getElementById("refreshButton").addEventListener(
+    "click",
+    loadResources
+);
+
+
+/* LOGOUT */
+
+document.getElementById("logoutButton").addEventListener(
+    "click",
+    async () => {
+        const { error } = await db.auth.signOut();
+
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        showLogin();
+
+        showMessage(loginStatus, "Sign out successful.");
+    }
+);
+
+
+/* RESTORE SESSION */
+
+async function initialise() {
+    const { data, error } = await db.auth.getSession();
+
+    if (error) {
+        showMessage(loginStatus, error.message);
+        return;
+    }
+
+    const user = data.session?.user;
+
+    if (!user) {
+        showLogin();
+        return;
+    }
+
+    if (!isAdmin(user)) {
+        await db.auth.signOut();
+
+        showLogin();
+
+        showMessage(
+            loginStatus,
+            "Is account ko admin permission nahi hai."
+        );
+
+        return;
+    }
+
+    showDashboard(user);
+}
+
+initialise();
+
+
+/* HANDLE AUTH CHANGES */
+
+db.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT") {
+        showLogin();
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1193 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Study Materials | Arya StudyVault</title>
+
+    <meta name="description"
+          content="Arya StudyVault students portal. Search notes, PDFs, syllabus and previous year papers.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #102b59;
+            --secondary: #174ea6;
+            --accent: #ffbd45;
+            --background: #f4f7fc;
+            --text: #172033;
+            --muted: #657189;
+            --white: #ffffff;
+            --border: #e2e8f2;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            background: white;
+            padding: 14px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+            box-shadow: 0 3px 15px #0000000a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .brand img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .home-btn {
+            background: var(--secondary);
+            color: white !important;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        /* HERO */
+
+        .hero {
+            padding: 55px 6% 75px;
+            background:
+                radial-gradient(
+                    circle at 85% 10%,
+                    #4d82d7 0,
+                    transparent 30%
+                ),
+                linear-gradient(125deg, #0b1e40, #174ea6);
+            color: white;
+            text-align: center;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 25px;
+            background: #ffffff1c;
+            color: #ffe2a5;
+            border: 1px solid #ffffff30;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .hero h2 {
+            font-size: clamp(30px, 5vw, 45px);
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: 0 auto;
+            color: #e0e9ff;
+            font-size: 16px;
+        }
+
+        /* MAIN */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: -28px auto 50px;
+            position: relative;
+        }
+
+        /* SEARCH */
+
+        .search-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px #102b5910;
+        }
+
+        .search-panel h3 {
+            color: var(--primary);
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .search-description {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d6deeb;
+            border-radius: 9px;
+            background: white;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            min-width: 0;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px #174ea615;
+        }
+
+        .search-input {
+            position: relative;
+        }
+
+        .search-input input {
+            padding-left: 42px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .filter-label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 0 6px 2px;
+        }
+
+        .filter-item {
+            min-width: 0;
+        }
+
+        .filter-item select {
+            margin-top: 0;
+        }
+
+        .search-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 17px;
+            flex-wrap: wrap;
+        }
+
+        .clear-btn {
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            background: #f5f8ff;
+            color: var(--secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* RESULTS */
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 30px 0 18px;
+            flex-wrap: wrap;
+        }
+
+        .results-header h3 {
+            color: var(--primary);
+            font-size: 23px;
+        }
+
+        .results-count {
+            background: #e6efff;
+            color: var(--secondary);
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* RESOURCE CARDS */
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .material-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 21px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            box-shadow: 0 4px 18px #00000005;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .material-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px #102b5910;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 13px;
+        }
+
+        .pdf-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            background: #fff0ef;
+            border-radius: 12px;
+            font-size: 25px;
+            flex-shrink: 0;
+        }
+
+        .type-badge {
+            display: inline-block;
+            background: #eaf1ff;
+            color: #174ea6;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .material-card h4 {
+            color: var(--primary);
+            font-size: 18px;
+            line-height: 1.4;
+            margin-bottom: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .material-info {
+            display: grid;
+            gap: 9px;
+            margin-bottom: 18px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            color: var(--muted);
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .info-row strong {
+            color: #37445a;
+        }
+
+        .file-name {
+            border-top: 1px solid #edf0f6;
+            padding-top: 12px;
+            margin-top: auto;
+            color: var(--muted);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 11px 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .view-btn {
+            color: var(--secondary);
+            background: #eaf1ff;
+        }
+
+        .download-btn {
+            color: white;
+            background: var(--secondary);
+        }
+
+        .action-btn:hover {
+            opacity: 0.88;
+        }
+
+        /* STATUS */
+
+        .status-box {
+            padding: 27px 20px;
+            text-align: center;
+            color: var(--muted);
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-top: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .status-box h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .status-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #091a35;
+            color: white;
+            padding: 30px 6% 20px;
+            text-align: center;
+        }
+
+        footer p {
+            color: #c5d1e8;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        footer a {
+            color: #ffe2a5;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 950px) {
+            .filters {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .materials-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 12px 5%;
+            }
+
+            .brand img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand h1 {
+                font-size: 17px;
+            }
+
+            .brand p {
+                font-size: 10px;
+            }
+
+            .nav-links {
+                gap: 8px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .home-btn {
+                padding: 8px 10px;
+            }
+
+            .hero {
+                padding: 45px 6% 65px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .search-panel {
+                padding: 19px;
+            }
+
+            .search-panel h3 {
+                font-size: 20px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<header class="navbar">
+
+    <a href="index.html" class="brand">
+
+        <img
+            src="arya-logo.png"
+            alt="Arya College Logo"
+            onerror="this.style.display='none'"
+        >
+
+        <div>
+            <h1>Arya StudyVault</h1>
+            <p>Student Study Portal</p>
+        </div>
+
+    </a>
+
+    <nav class="nav-links">
+        <a href="index.html">🏠 Home</a>
+        <a href="#materialsSection" class="home-btn">Study Materials</a>
+    </nav>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <span class="hero-tag">
+        🎓 Arya College · Main Campus Jaipur
+    </span>
+
+    <h2>Student Study Materials</h2>
+
+    <p>
+        Apne semester ke notes, syllabus, assignments aur previous year
+        question papers ko ek hi jagah search karo.
+    </p>
+
+</section>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="container">
+
+    <!-- SEARCH PANEL -->
+
+    <section class="search-panel">
+
+        <h3>🔎 Find Your Study Material</h3>
+
+        <p class="search-description">
+            PDF title, subject, branch ya file name se search karo.
+        </p>
+
+        <div class="search-input">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="Search notes, Mathematics, Physics..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- FILTERS -->
+
+        <div class="filters">
+
+            <div class="filter-item">
+
+                <label class="filter-label" for="branchFilter">
+                    Branch
+                </label>
+
+                <select id="branchFilter">
+                    <option value="">All Branches</option>
+                    <option value="CSE">Computer Science (CSE)</option>
+                    <option value="AI">Artificial Intelligence (AI)</option>
+                    <option value="AIML">AI & Machine Learning (AIML)</option>
+                    <option value="ECE">Electronics (ECE)</option>
+                    <option value="EE">Electrical (EE)</option>
+                    <option value="ME">Mechanical (ME)</option>
+                    <option value="CE">Civil (CE)</option>
+                    <option value="ALL">Common Material</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-item">
+
+                <label class="filter-label" for="yearFilter">
+                    Academic Year
+                </label>
+
+                <select id="yearFilter">
+                    <option value="">All Years</option>
+                    <option value="1">First Year</option>
+                    <option value="2">Second Year</option>
+                    <option value="3">Third Year</option>
+                    <option value="4">Fourth Year</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-item">
+
+                <label class="filter-label" for="semesterFilter">
+                    Semester
+                </label>
+
+                <select id="semesterFilter">
+                    <option value="">All Semesters</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+
+            </div>
+
+
+            <div class="filter-item">
+
+                <label class="filter-label" for="typeFilter">
+                    Material Type
+                </label>
+
+                <select id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="Notes">Notes</option>
+                    <option value="Previous Year Paper">
+                        Previous Year Paper
+                    </option>
+                    <option value="Syllabus">Syllabus</option>
+                    <option value="Assignment">Assignment</option>
+                    <option value="Other">Other</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="search-actions">
+
+            <span style="font-size:13px;color:#657189;">
+                📄 Search and download available PDFs
+            </span>
+
+            <button class="clear-btn" id="clearFilters" type="button">
+                Clear Filters ↺
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULTS -->
+
+    <section id="materialsSection">
+
+        <div class="results-header">
+
+            <h3>📚 Available Study Materials</h3>
+
+            <span class="results-count" id="resultCount">
+                Loading...
+            </span>
+
+        </div>
+
+
+        <div id="statusBox" class="status-box" role="status">
+
+            <div class="status-icon">⏳</div>
+
+            <h3>Loading Materials</h3>
+
+            <p>Supabase se PDFs load ho rahi hain...</p>
+
+        </div>
+
+
+        <div id="materialsGrid" class="materials-grid"></div>
+
+    </section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        © <span id="currentYear"></span> Arya StudyVault
+    </p>
+
+    <p>
+        Student Educational Portal | Arya College Jaipur
+    </p>
+
+    <p>
+        <a href="index.html">Back to Homepage</a>
+    </p>
+
+</footer>
+
+
+<script>
+/* =========================================
+   SUPABASE CONFIGURATION
+========================================= */
+
+const SUPABASE_URL =
+    "https://zukxhffmasnnyuonmlbx.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_lfJyl7L1JuKvXhAlJ0Oryg_0waqWKM-";
+
+const STORAGE_BUCKET = "studymeterial";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================================
+   HTML ELEMENTS
+========================================= */
+
+const searchInput = document.getElementById("searchInput");
+
+const branchFilter = document.getElementById("branchFilter");
+
+const yearFilter = document.getElementById("yearFilter");
+
+const semesterFilter = document.getElementById("semesterFilter");
+
+const typeFilter = document.getElementById("typeFilter");
+
+const clearFiltersButton = document.getElementById("clearFilters");
+
+const materialsGrid = document.getElementById("materialsGrid");
+
+const statusBox = document.getElementById("statusBox");
+
+const resultCount = document.getElementById("resultCount");
+
+
+/* =========================================
+   DATA
+========================================= */
+
+let allMaterials = [];
+
+
+/* =========================================
+   SAFE TEXT OUTPUT
+========================================= */
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (character) {
+        const replacements = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        };
+
+        return replacements[character];
+    });
+}
+
+
+/* =========================================
+   STATUS MESSAGE
+========================================= */
+
+function showStatus(icon, title, message) {
+
+    statusBox.classList.remove("hidden");
+
+    statusBox.innerHTML = `
+        <div class="status-icon">${escapeHTML(icon)}</div>
+        <h3>${escapeHTML(title)}</h3>
+        <p>${escapeHTML(message)}</p>
+    `;
+
+}
+
+
+/* =========================================
+   GET PUBLIC PDF URL
+========================================= */
+
+function getPDFUrl(material) {
+
+    const { data } = supabaseClient.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(material.file_path);
+
+    return data.publicUrl;
+
+}
+
+
+/* =========================================
+   LOAD MATERIALS FROM SUPABASE
+========================================= */
+
+async function loadMaterials() {
+
+    showStatus(
+        "⏳",
+        "Loading Materials",
+        "Supabase se PDFs load ho rahi hain..."
+    );
+
+    resultCount.textContent = "Loading...";
+
+    const { data, error } = await supabaseClient
+        .from("study_resources")
+        .select(
+            "id,title,subject,branch,academic_year,semester,material_type,paper_year,file_name,file_path,created_at"
+        )
+        .order("created_at", { ascending: false });
+
+    if (error) {
+
+        console.error("Supabase error:", error);
+
+        allMaterials = [];
+
+        materialsGrid.replaceChildren();
+
+        resultCount.textContent = "Unavailable";
+
+        showStatus(
+            "⚠️",
+            "Materials Load Nahi Hue",
+            "Supabase connection, table name aur database SELECT policy check karo."
+        );
+
+        return;
+
+    }
+
+    allMaterials = (data || []).filter(function (material) {
+
+        return (
+            typeof material.file_path === "string" &&
+            material.file_path.trim() !== ""
+        );
+
+    });
+
+    renderMaterials();
+
+}
+
+
+/* =========================================
+   FILTER MATERIALS
+========================================= */
+
+function getFilteredMaterials() {
+
+    const searchTerm = searchInput.value
+        .trim()
+        .toLowerCase();
+
+    const selectedBranch = branchFilter.value;
+
+    const selectedYear = yearFilter.value;
+
+    const selectedSemester = semesterFilter.value;
+
+    const selectedType = typeFilter.value;
+
+    return allMaterials.filter(function (material) {
+
+        const searchableText = [
+            material.title,
+            material.subject,
+            material.file_name,
+            material.material_type,
+            material.branch,
+            material.academic_year,
+            material.semester,
+            material.paper_year
+        ]
+        .map(value => String(value ?? ""))
+        .join(" ")
+        .toLowerCase();
+
+
+        const matchesSearch =
+            searchableText.includes(searchTerm);
+
+
+        const matchesBranch =
+            !selectedBranch ||
+            material.branch === selectedBranch;
+
+
+        const matchesYear =
+            !selectedYear ||
+            String(material.academic_year) === selectedYear;
+
+
+        const matchesSemester =
+            !selectedSemester ||
+            String(material.semester) === selectedSemester;
+
+
+        const matchesType =
+            !selectedType ||
+            material.material_type === selectedType;
+
+
+        return (
+            matchesSearch &&
+            matchesBranch &&
+            matchesYear &&
+            matchesSemester &&
+            matchesType
+        );
+
+    });
+
+}
+
+
+/* =========================================
+   RENDER MATERIAL CARDS
+========================================= */
+
+function renderMaterials() {
+
+    const filteredMaterials = getFilteredMaterials();
+
+    materialsGrid.replaceChildren();
+
+    resultCount.textContent =
+        `${filteredMaterials.length} PDF(s)`;
+
+
+    if (filteredMaterials.length === 0) {
+
+        if (allMaterials.length === 0) {
+
+            showStatus(
+                "📚",
+                "Abhi Koi PDF Available Nahi Hai",
+                "Jab authorised user study material upload karega, PDFs yahan dikhengi."
+            );
+
+        } else {
+
+            showStatus(
+                "🔎",
+                "Koi Matching PDF Nahi Mili",
+                "Search term ya filters badal kar dobara try karo."
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    statusBox.classList.add("hidden");
+
+
+    filteredMaterials.forEach(function (material) {
+
+        const card = document.createElement("article");
+
+        card.className = "material-card";
+
+
+        const title = escapeHTML(material.title);
+
+        const subject = escapeHTML(material.subject);
+
+        const branch = escapeHTML(material.branch);
+
+        const academicYear = escapeHTML(material.academic_year);
+
+        const semester = escapeHTML(material.semester);
+
+        const materialType = escapeHTML(material.material_type);
+
+        const fileName = escapeHTML(material.file_name);
+
+        const paperYear = material.paper_year
+            ? escapeHTML(material.paper_year)
+            : "";
+
+
+        const pdfURL = getPDFUrl(material);
+
+        const safeURL = escapeHTML(pdfURL);
+
+
+        card.innerHTML = `
+
+            <div class="card-top">
+
+                <div class="pdf-icon">📄</div>
+
+                <span class="type-badge">
+                    ${materialType}
+                </span>
+
+            </div>
+
+
+            <h4>${title}</h4>
+
+
+            <div class="material-info">
+
+                <div class="info-row">
+                    📘 <span><strong>Subject:</strong> ${subject}</span>
+                </div>
+
+                <div class="info-row">
+                    🎓 <span><strong>Branch:</strong> ${branch}</span>
+                </div>
+
+                <div class="info-row">
+                    📅 <span><strong>Academic Year:</strong> ${academicYear}</span>
+                </div>
+
+                <div class="info-row">
+                    📖 <span><strong>Semester:</strong> ${semester}</span>
+                </div>
+
+                ${
+                    paperYear
+                    ? `
+                        <div class="info-row">
+                            📝 <span><strong>Paper Year:</strong> ${paperYear}</span>
+                        </div>
+                    `
+                    : ""
+                }
+
+            </div>
+
+
+            <div class="file-name">
+                📎 ${fileName}
+            </div>
+
+
+            <div class="card-actions">
+
+                <a
+                    class="action-btn view-btn"
+                    href="${safeURL}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    👁️ View PDF
+                </a>
+
+                <a
+                    class="action-btn download-btn"
+                    href="${safeURL}"
+                    download="${fileName}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    ⬇ Download
+                </a>
+
+            </div>
+
+        `;
+
+
+        materialsGrid.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   SEARCH EVENTS
+========================================= */
+
+searchInput.addEventListener("input", renderMaterials);
+
+branchFilter.addEventListener("change", renderMaterials);
+
+yearFilter.addEventListener("change", renderMaterials);
+
+semesterFilter.addEventListener("change", renderMaterials);
+
+typeFilter.addEventListener("change", renderMaterials);
+
+
+/* =========================================
+   CLEAR FILTERS
+========================================= */
+
+clearFiltersButton.addEventListener("click", function () {
+
+    searchInput.value = "";
+
+    branchFilter.value = "";
+
+    yearFilter.value = "";
+
+    semesterFilter.value = "";
+
+    typeFilter.value = "";
+
+    renderMaterials();
+
+});
+
+
+/* =========================================
+   COPYRIGHT YEAR
+========================================= */
+
+document.getElementById("currentYear").textContent =
+    new Date().getFullYear();
+
+
+/* =========================================
+   START
+========================================= */
+
+loadMaterials();
+
+</script>
+
+</body>
+</html>
+```
